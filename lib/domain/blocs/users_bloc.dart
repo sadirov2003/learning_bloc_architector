@@ -89,12 +89,12 @@ class UsersBloc {
     }
   }
 
-  /* void updateState(UserState state) {
+  void updateState(UserState state) {
     if (_state == state) return;
     _state = state;
-    _stateContoller.add(state);
+    //_stateContoller.add(state);
   }
-
+/*
   Future<void> _initialize() async {
     final user = await _userDataProvider.loadValue();
     updateState(_state.copyWith(currentUser: user));
