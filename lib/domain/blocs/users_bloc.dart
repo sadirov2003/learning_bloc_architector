@@ -34,67 +34,25 @@ class UserState {
   String toString() => 'UserState(currentUser: $currentUser)';
 }
 
-abstract class UsersEvents {}
-
-class UserIncrementEvent implements UsersEvents {}
-
-class UsersDecrementEvent implements UsersEvents {}
-
-class UsersInitializeEvent implements UsersEvents {}
-
 class UsersBloc {
   final _userDataProvider = UserDataProvider();
   var _state = UserState(currentUser: User(0));
 
-  final _stateController = StreamController<UsersEvents>.broadcast();
-  late final Stream<UserState> _stateStream;
+  final _stateController = StreamController<UserState>();
 
   UserState get state => _state;
-  Stream<UserState> get stream => _stateStream;
+  Stream<UserState> get stream => _stateController.stream.asBroadcastStream();
 
   UsersBloc() {
-    //dispatch(UsersInitializeEvent());
-    _stateStream = _stateController.stream
-        .asyncExpand<UserState>((_mapEventToState))
-        .asyncExpand(_updateState)
-        .asBroadcastStream();
-    _stateStream.listen((event) {});
-    dispatch(UsersInitializeEvent());
-  }
-
-  void dispatch(UsersEvents event) {
-    _stateController.add(event);
-  }
-
-  Stream<UserState> _updateState(UserState state) async* {
-    if (_state == state) return;
-    _state = state;
-    yield state;
-  }
-
-  Stream<UserState> _mapEventToState(UsersEvents event) async* {
-    if (event is UsersInitializeEvent) {
-      final user = await _userDataProvider.loadValue();
-      yield UserState(currentUser: user);
-    } else if (event is UserIncrementEvent) {
-      var user = _state.currentUser;
-      user = user.copyWith(age: user.age + 1);
-      await _userDataProvider.saveValue(user);
-      yield UserState(currentUser: user);
-    } else if (event is UsersDecrementEvent) {
-      var user = _state.currentUser;
-      user = user.copyWith(age: user.age - 1);
-      await _userDataProvider.saveValue(user);
-      yield UserState(currentUser: user);
-    }
+    _initialize();
   }
 
   void updateState(UserState state) {
     if (_state == state) return;
     _state = state;
-    //_stateContoller.add(state);
+    _stateController.add(state);
   }
-/*
+
   Future<void> _initialize() async {
     final user = await _userDataProvider.loadValue();
     updateState(_state.copyWith(currentUser: user));
@@ -112,5 +70,5 @@ class UsersBloc {
     user = user.copyWith(age: user.age - 1);
     updateState(_state.copyWith(currentUser: user));
     _userDataProvider.saveValue(user);
-  }*/
+  }
 }
