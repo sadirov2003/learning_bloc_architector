@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:bloc/bloc.dart';
 import 'package:flutter_mvvm_1/domain/entity/user.dart';
 
 import '../data_providers/user_data_provider.dart';
@@ -34,41 +35,48 @@ class UserState {
   String toString() => 'UserState(currentUser: $currentUser)';
 }
 
-class UsersBloc {
+class UsersCubit extends Cubit<UserState> {
   final _userDataProvider = UserDataProvider();
-  var _state = UserState(currentUser: User(0));
-
-  final _stateController = StreamController<UserState>();
-
-  UserState get state => _state;
-  Stream<UserState> get stream => _stateController.stream.asBroadcastStream();
-
-  UsersBloc() {
+   UsersCubit() : super(UserState(currentUser: User(0))) {
     _initialize();
   }
+  //var _state = UserState(currentUser: User(0));
 
-  void updateState(UserState state) {
+  //final _stateController = StreamController<UserState>();
+
+  //UserState get state => _state;
+  //Stream<UserState> get stream => _stateController.stream.asBroadcastStream();
+
+ 
+
+  /*void updateState(UserState state) {
     if (_state == state) return;
     _state = state;
     _stateController.add(state);
+    void close() {
+    _stateController.close();
   }
+  }*/
 
   Future<void> _initialize() async {
     final user = await _userDataProvider.loadValue();
-    updateState(_state.copyWith(currentUser: user));
+    final newState = state.copyWith(currentUser: user);
+    emit(newState);
   }
 
   void incrementAge() {
-    var user = _state.currentUser;
+    var user = state.currentUser;
     user = user.copyWith(age: user.age + 1);
-    updateState(_state.copyWith(currentUser: user));
+    emit(state.copyWith(currentUser: user));
     _userDataProvider.saveValue(user);
   }
 
   void decrementAge() {
-    var user = _state.currentUser;
+    var user = state.currentUser;
     user = user.copyWith(age: user.age - 1);
-    updateState(_state.copyWith(currentUser: user));
+    emit(state.copyWith(currentUser: user));
     _userDataProvider.saveValue(user);
   }
+
+  
 }

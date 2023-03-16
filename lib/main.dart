@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mvvm_1/ui/widgets/auth_widget.dart';
+
 import 'package:flutter_mvvm_1/ui/widgets/example_widget.dart';
 import 'package:provider/provider.dart';
 
-import 'domain/blocs/users_bloc.dart';
-import 'ui/widgets/loader_widget.dart';
+import 'domain/blocs/users_cubit.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +20,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Provider(
-        create: (_) => UsersBloc(),
+      home: Provider<UsersCubit>(
+        create: (_) => UsersCubit(),
         child: ExampleWidget(),
+        dispose: (context,  value) => value.close(),
       ),
       //routes: {
       //  'auth': (_) => AuthWidget.create(),
