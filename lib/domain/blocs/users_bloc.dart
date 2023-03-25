@@ -2,11 +2,13 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mvvm_1/domain/entity/user.dart';
 
 import '../data_providers/user_data_provider.dart';
 
-class UserState {
+class UserState{
   late final User currentUser;
   UserState({
     required this.currentUser,
@@ -42,17 +44,17 @@ class UsersDecrementEvent implements UsersEvents {}
 
 class UsersInitializeEvent implements UsersEvents {}
 
-class UsersBloc {
+class UsersBloc extends Bloc<UsersEvents, UserState>{
   final _userDataProvider = UserDataProvider();
   var _state = UserState(currentUser: User(0));
 
   final _stateController = StreamController<UsersEvents>.broadcast();
   late final Stream<UserState> _stateStream;
 
-  UserState get state => _state;
-  Stream<UserState> get stream => _stateStream;
+  //UserState get state => _state;
+  //Stream<UserState> get stream => _stateStream;
 
-  UsersBloc() {
+  UsersBloc() : super(UserState(currentUser: User(0))){
     //dispatch(UsersInitializeEvent());
     _stateStream = _stateController.stream
         .asyncExpand<UserState>((_mapEventToState))

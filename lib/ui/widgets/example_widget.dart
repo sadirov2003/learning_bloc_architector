@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mvvm_1/domain/blocs/users_bloc.dart';
 import 'package:flutter_mvvm_1/domain/services/auth_service.dart';
 import 'package:flutter_mvvm_1/ui/widgets/navigation/main_navigation.dart';
@@ -123,7 +124,11 @@ class _AgeTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<UsersBloc>();
+    return BlocBuilder<UsersBloc, UserState>(builder: (context, state) {
+      final age = state.currentUser.age;
+      return Text('');
+    });
+    /*final bloc = context.read<UsersBloc>();
     return StreamBuilder<UserState>(
         initialData: bloc.state,
         stream: bloc.stream,
@@ -131,6 +136,6 @@ class _AgeTitle extends StatelessWidget {
           final age = snapshot.requireData.currentUser.age;
           return Text('$age');
    },
-  );
+  );*/
   }
 }

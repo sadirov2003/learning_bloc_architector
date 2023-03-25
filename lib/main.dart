@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mvvm_1/ui/widgets/auth_widget.dart';
 import 'package:flutter_mvvm_1/ui/widgets/example_widget.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Provider(
+      home: BlocProvider<UsersBloc>(
         create: (_) => UsersBloc(),
         child: ExampleWidget(),
       ),
