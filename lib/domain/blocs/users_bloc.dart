@@ -56,6 +56,7 @@ class UsersBloc extends Bloc<UsersEvents, UserState>{
 
   UsersBloc() : super(UserState(currentUser: User(0))){
     //dispatch(UsersInitializeEvent());
+    
     _stateStream = _stateController.stream
         .asyncExpand<UserState>((_mapEventToState))
         .asyncExpand(_updateState)
